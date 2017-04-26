@@ -7,5 +7,40 @@
 	"extdescr": {
 		"message": "This extension convert standard tables on LightSquid's pages user_detail.cgi and topsites.cgi. Do some makeup's changes & get SLD statistics.",
 		"description": "Extension description"
+	},
+
+	"sld": {
+		"message": "2-level domain",
+		"description": "Second-level domains table"
+	},
+
+	"sldheader": {
+		"message": "SLD or IP address",
+		"description": "Header for site column"
+	},
+
+	"tld": {
+		"message": "3-level domain",
+		"description": "Third-level domains table"
+	},
+
+	"tldheader": {
+		"message": "SLD or 3-level domain or IP address",
+		"description": "Header for site column"
+	},
+
+	"begin": {
+		"message": "Original",
+		"description": "Original stat table"
+	},
+
+	"all": {
+		"message": "Sum",
+		"description": "Sum of traffic"
+	},
+
+	"traffic": {
+		"message": "Traffic",
+		"description": "Traffic for site"
 	}
 }

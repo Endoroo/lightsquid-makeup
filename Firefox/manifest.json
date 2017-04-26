@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extname__",
-  "version": "1.0",
+  "version": "1.1",
 
   "background": {
     "scripts": ["js/background.js"]
@@ -13,8 +13,10 @@
 
   "default_locale": "en",
   "description": "__MSG_extdescr__",
-  "icons": { "48": "icons/icon-on.svg",
-             "96": "icons/icon-on.svg" },
+  "icons": {
+    "48": "icons/icon-on.svg",
+    "96": "icons/icon-on.svg"
+  },
 
   "content_scripts": [
     {
@@ -27,5 +29,11 @@
   "permissions": [
     "storage",
     "tabs"
-  ]
+  ],
+
+  "applications": {
+    "gecko": {
+      "id": "ver2ck@gmail.com"
+    }
+  }
 }

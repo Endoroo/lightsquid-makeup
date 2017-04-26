@@ -1,3 +1,14 @@
+.elem-hide { display: none; }
+#stat-nav { margin-top: 12px; }
+
+#stat-nav span {
+	color: #08298A;
+    cursor: pointer;
+    padding: 3px;
+}
+
+#stat-nav span:hover { text-decoration: underline; }
+
 div.stat {
 	text-align: justify;
 	width: 712px;
