@@ -252,6 +252,6 @@ browser.storage.sync.get('enable', function(item) {
 		links.appendChild(span);
 
 		// add nav to page
-		this.elem.insertBefore(links, this.elem.children[0]);
+		convert.elem.insertBefore(links, convert.elem.children[0]);
 	}
 });
