@@ -37,7 +37,7 @@ class LSConvert {
 	 * @return {Boolean} Success or not
 	 */
 	checkArgs() {
-		if (this.elem.nodeType == 'undefined' || (this.page != 'u' && this.page != 'u') || typeof this.mode != 'number')
+		if (this.elem.nodeType == 'undefined' || (this.page != 'u' && this.page != 't') || typeof this.mode != 'number')
 			return false;
 		return true;
 	}
