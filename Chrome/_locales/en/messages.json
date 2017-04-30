@@ -1,11 +1,11 @@
 {
 	"extname": {
-		"message": "LightSquid SLD sites",
+		"message": "LightSquid domain tables",
 		"description": "Extension name"
 	},
 
 	"extdescr": {
-		"message": "This extension convert standard tables on LightSquid's pages user_detail.cgi and topsites.cgi. Do some makeup's changes & get SLD statistics.",
+		"message": "Convert standard tables on LightSquid's pages user_detail.cgi and topsites.cgi. Do some makeup's changes & get domain statistics.",
 		"description": "Extension description"
 	},
 

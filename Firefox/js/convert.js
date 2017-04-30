@@ -184,74 +184,77 @@ browser.storage.sync.get('enable', function(item) {
 	if (flag) {
 		convert = new LSConvert();
 		
-		var	links, span;
+		
+		if (convert.checkArgs()) {
+			var	links, span;
 
-		// create navigation div
-		links  = document.createElement('div');
-		links.setAttribute('id', 'stat-nav');
+			// create navigation div
+			links  = document.createElement('div');
+			links.setAttribute('id', 'stat-nav');
 
-		// add first el
-		span = document.createElement('span');
-		span.className  += 'stat-sld';
-		span.innerHTML   = browser.i18n.getMessage('sld');
-		span.addEventListener('click', function(){
-			var d2 = document.getElementById('stat-2dl'),
-				d3 = document.getElementById('stat-3dl');
-				
-			convert.elem.getElementsByTagName('table')[0].className = 'elem-hide';
+			// add first el
+			span = document.createElement('span');
+			span.className  += 'stat-sld';
+			span.innerHTML   = browser.i18n.getMessage('sld');
+			span.addEventListener('click', function(){
+				var d2 = document.getElementById('stat-2dl'),
+					d3 = document.getElementById('stat-3dl');
+					
+				convert.elem.getElementsByTagName('table')[0].className = 'elem-hide';
 
-			if (d2 !== null) 
-				d2.className = 'stat';
-			else {
-				convert.setMode(2);
-				convert.renderStats();
-			}
+				if (d2 !== null) 
+					d2.className = 'stat';
+				else {
+					convert.setMode(2);
+					convert.renderStats();
+				}
 
-			if (d3 !== null)
-				d3.className = 'elem-hide';
-		});
-		links.appendChild(span);
+				if (d3 !== null)
+					d3.className = 'elem-hide';
+			});
+			links.appendChild(span);
 
-		// add second el
-		span = document.createElement('span');
-		span.className  += 'stat-tld';
-		span.innerHTML   = browser.i18n.getMessage('tld');
-		span.addEventListener('click', function(){
-			var d2 = document.getElementById('stat-2dl'),
-				d3 = document.getElementById('stat-3dl');
+			// add second el
+			span = document.createElement('span');
+			span.className  += 'stat-tld';
+			span.innerHTML   = browser.i18n.getMessage('tld');
+			span.addEventListener('click', function(){
+				var d2 = document.getElementById('stat-2dl'),
+					d3 = document.getElementById('stat-3dl');
 
-			convert.elem.getElementsByTagName('table')[0].className = 'elem-hide';
+				convert.elem.getElementsByTagName('table')[0].className = 'elem-hide';
 
-			if (d2 !== null) 
-				d2.className = 'elem-hide';
+				if (d2 !== null) 
+					d2.className = 'elem-hide';
 
-			if (d3 !== null)
-				d3.className = 'stat';				
-			else {
-				convert.setMode(3);
-				convert.renderStats();
-			}
-		});
-		links.appendChild(span);
+				if (d3 !== null)
+					d3.className = 'stat';				
+				else {
+					convert.setMode(3);
+					convert.renderStats();
+				}
+			});
+			links.appendChild(span);
 
-		// add third el
-		span = document.createElement('span');
-		span.className  += 'stat-begin';
-		span.innerHTML   = browser.i18n.getMessage('begin');
-		span.addEventListener('click', function(){
-			var d2 = document.getElementById('stat-2dl'),
-				d3 = document.getElementById('stat-3dl');
-				
-			convert.elem.getElementsByTagName('table')[0].className = '';
+			// add third el
+			span = document.createElement('span');
+			span.className  += 'stat-begin';
+			span.innerHTML   = browser.i18n.getMessage('begin');
+			span.addEventListener('click', function(){
+				var d2 = document.getElementById('stat-2dl'),
+					d3 = document.getElementById('stat-3dl');
+					
+				convert.elem.getElementsByTagName('table')[0].className = '';
 
-			if (d2 !== null)
-				d2.className = 'elem-hide';
-			if (d3 !== null)
-				d3.className = 'elem-hide';
-		});
-		links.appendChild(span);
+				if (d2 !== null)
+					d2.className = 'elem-hide';
+				if (d3 !== null)
+					d3.className = 'elem-hide';
+			});
+			links.appendChild(span);
 
-		// add nav to page
-		convert.elem.insertBefore(links, convert.elem.children[0]);
+			// add nav to page
+			convert.elem.insertBefore(links, convert.elem.children[0]);
+		}
 	}
 });

@@ -2,7 +2,7 @@
 Simple "on/off" extestions for Google Chrome and Mozilla Firefox for tables on **LightSquid**'s pages **_user_detail.cgi_** and **_topsites.cgi_**
 
 ## Chrome
-Extension with unnessey popup created for example only. Based on [Chrome Platform Javascript API](https://developer.chrome.com/extensions/api_index)
+[Extension](https://chrome.google.com/webstore/detail/lightsquid-domain-tables/fafccnlhnfddlpgalmebpmnokiegldca?hl=en) with unnessey popup created for example only. Based on [Chrome Platform Javascript API](https://developer.chrome.com/extensions/api_index)
 
 Switcher "ON/OFF" appears with popup. Rasted [GIMP](https://www.gimp.org/)-created PNG files are used as icons.
 
