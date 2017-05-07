@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extname__",
-  "version": "1.2",
+  "version": "1.3",
 
   "background": {
     "scripts": ["js/background.js"]
@@ -17,10 +17,11 @@
     "48": "icons/icon-on.svg",
     "96": "icons/icon-on.svg"
   },
+  "short_name": "__MSG_extshort__",
 
   "content_scripts": [
     {
-      "matches": ["http://*/*.cgi*"],
+      "matches": ["*://*/*.cgi*"],
       "css": ["css/convert.css"],
       "js": ["js/convert.js"]
     }

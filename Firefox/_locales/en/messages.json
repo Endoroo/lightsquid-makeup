@@ -1,12 +1,17 @@
 {
 	"extname": {
-		"message": "LightSquid SLD sites",
+		"message": "LightSquid domain tables",
 		"description": "Extension name"
 	},
 
 	"extdescr": {
-		"message": "This extension convert standard tables on LightSquid's pages user_detail.cgi and topsites.cgi. Do some makeup's changes & get SLD statistics.",
+		"message": "Convert standard tables on LightSquid's pages user_detail.cgi and topsites.cgi. Do some makeup's changes & get domain statistics.",
 		"description": "Extension description"
+	},
+
+	"extshort": {
+		"message": "LightSquid div",
+		"description": "Short extension name"
 	},
 
 	"sld": {
@@ -42,5 +47,15 @@
 	"traffic": {
 		"message": "Traffic",
 		"description": "Traffic for site"
+	},
+
+	"conn": {
+		"message": "Connections",
+		"description": "Number of connectioins to site"
+	},
+
+	"GB": {
+		"message": "GB",
+		"description": "Traffic measurement unit"
 	}
 }

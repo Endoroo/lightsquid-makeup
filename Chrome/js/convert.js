@@ -7,10 +7,12 @@ class LSConvert {
 	/**
 	 * Constructor
 	 */
-	constructor(mode) {
+	constructor() {
 		this.elem = {};
 		this.mode = 0;
 		this.page = '';
+		this.list = {};
+		this.sum  = 0;
 
 		var url = window.location.href;
 		if (url.match(/.+user_detail\.cgi.+/g) != null) {
@@ -43,19 +45,21 @@ class LSConvert {
 	}
 
 	/**
-	 * Get list of domains 
-	 * @return {Object} Domains array
+	 * Build list of domains
 	 */
-	getDomains() {
+	buildList() {
 		if (!this.checkArgs()) return [];
 
 		// basic definition & check working page
-		var td1, td2;
-		if (this.page == 'u') { td1 = 1; td2 = 3; }
-		if (this.page == 't') { td1 = 2; td2 = 4; }
+		// t1 - site
+		// t2 - number of connections
+		// t3 - traffic
+		var td1, td2, td3;
+		if (this.page == 'u') { td1 = 1; td2 = 2; td3 = 3; }
+		if (this.page == 't') { td1 = 2; td2 = 3; td3 = 4; }
 		
 		var links = [], trs   = document.getElementsByTagName('tr'),
-			tds, site, ip, count, temp, i;
+			tds, site, ip, conn, count, temp, i;
 
 		// get all sites from tr
 		for (i in trs) {
@@ -63,8 +67,11 @@ class LSConvert {
 			if (typeof trs[i].getElementsByTagName !== 'function') continue;
 			tds = trs[i].getElementsByTagName('td');
 
-			// is td valid?
+			// is tr valid?
 			if (typeof tds[td1] === 'undefined' || typeof tds[td1].getElementsByTagName !== 'function') continue;
+			if (typeof tds[td2] === 'undefined' || typeof tds[td2].getElementsByTagName !== 'function') continue;
+			if (typeof tds[td3] === 'undefined' || typeof tds[td3].getElementsByTagName !== 'function') continue;
+
 			site = tds[td1].getElementsByTagName('a')[0];
 			if (typeof site === 'undefined') continue;
 
@@ -85,16 +92,18 @@ class LSConvert {
 			else
 				site = [tds[td1].getElementsByTagName('font')[0].innerHTML]; // array for next checking
 
-			if (site != null) {;
+			if (site != null) {
 				if (ip != null)	site = ip[0]
 				else site = site[0];
 
 				site = site.replace(/:443/g,'');
 				if (!links[site]) links[site] = 0;
 
+				// get conections as number
+				conn = tds[td2].getElementsByTagName('font')[0].innerHTML.replace(/\s/g,"");
+
 				// get traffic count in bytes
-				if (typeof tds[td2] === 'undefined' || typeof tds[td2].getElementsByTagName !== 'function') continue;
-				count = tds[td2].getElementsByTagName('font')[0].innerHTML.replace(/\s/g,"");
+				count = tds[td3].getElementsByTagName('font')[0].innerHTML.replace(/\s/g,"");
 				if (count.match('M') != null) {
 						count = count.replace('M', '');
 						count = count * 1024 * 1024;
@@ -103,68 +112,225 @@ class LSConvert {
 						count = count * 1024 * 1024 * 1024;
 					}
 
-				//save traffic count in bites			
-				links[site] = Number(links[site]) + Number(count);
+				// save traffic & connections
+				if (!links[site]) {
+					links[site] = {traffic: 0, conn: 0};
+				}
+				links[site].traffic = Number(links[site].traffic) + Number(count);
+				links[site].conn    = Number(links[site].conn) + Number(conn);
 			}
+
 		}
 
 		// convert to array of objects
 		var stat = [], sum = 0;
 		for (site in links) {
-			count = (links[site] / 1024 / 1024 / 1024).toFixed(2);
-			stat.push({site: site, traffic: count});
-			sum = Number(sum) + Number(count);
+			if (links[site].traffic > 0) {
+				count = (links[site].traffic / 1024 / 1024 / 1024).toFixed(2);
+				stat.push({site: site, traffic: count, conn: links[site].conn});
+				sum = Number(sum) + Number(count);
+			}
 		}
 
-		// sort & output
-		stat.sort(function(a, b) {
-			return b.traffic - a.traffic;
-		})
-
-		return [stat, sum];
+		// save list for future sort
+		this.list = stat;
+		this.sum  = sum;
 	}
 
 	/**
-	 * Generate new stats makeup
+	 * Sort list of domains
+	 * @param {String} field Sort field
+	 * @param {String} mode Sort mode
 	 */
-	renderStats(){
+	sortList(field, mode) {
+		if (field == 'traffic') {
+			if (mode == 'down')
+				this.list.sort(function(a, b) {
+					return b.traffic - a.traffic;
+				});
+			if (mode == 'up')
+				this.list.sort(function(a, b) {
+					return a.traffic - b.traffic;
+				});
+		}
+		if (field == 'conn') {
+			if (mode == 'down')
+				this.list.sort(function(a, b) {
+					return b.conn - a.conn;
+				});
+			if (mode == 'up')
+				this.list.sort(function(a, b) {
+					return a.conn - b.conn;
+				});
+		}
+	}
+
+	/**
+	 * Generate new stats makeup	 
+	 * @param {Number} sum General traffic
+	 */
+	renderList(){
 		if (this.checkArgs()) {
-			var add, html, header = "";
+			var id = 'stat-' + this.mode + 'dl',
+				add = document.getElementById(id),
+				sum = this.sum,
+				div, sub, divUp1, divUp2, flag;
 
-			if (this.mode == 2) header = chrome.i18n.getMessage("sldheader");
-			if (this.mode == 3) header = chrome.i18n.getMessage("tldheader");
+			// First creation
+			if (add === null) {
+				flag = false;
 
-			add = document.createElement('div');
-			add.setAttribute('id', 'stat-' + this.mode + 'dl');
-			add.className = 'stat';
+				var header = "";
+				if (this.mode == 2) header = chrome.i18n.getMessage("sldheader");
+				if (this.mode == 3) header = chrome.i18n.getMessage("tldheader");
 
-			var domains = this.getDomains(), links = domains[0];
-			
-			html   = '<div class="stat-sum">' +
-				'	<div class="stat-sum-text">' + chrome.i18n.getMessage("all") + '</div>' +
-				'	<div class="stat-sum-number">' + domains[1].toFixed(2) +' GB</div>' +
-				'</div>' +
-				'<div class="stat-sites">' +
-				'	<div class="stat-sites-head">' +
-				'		<div class="stat-unit-number">№</div>' +
-				'		<div class="stat-unit-domain">' + header + '</div>' +
-				'		<div class="stat-unit-traffic">' + chrome.i18n.getMessage("traffic") + '</div>' +
-				'	</div>' +  
-				'	<div class="stat-sites-list">';
+				add = document.createElement('div');
+				add.setAttribute('id', id);
+				add.className = 'stat';
+
+				// View of traffic sum
+				div = document.createElement('div');
+				div.className  = 'stat-sum';
+
+				sub = document.createElement('div');
+				sub.className = 'stat-sum-text';
+				sub.innerHTML = chrome.i18n.getMessage("all");
+				div.appendChild(sub);
+				
+				sub = document.createElement('div');
+				sub.className = 'stat-sum-number';
+				sub.innerHTML = sum.toFixed(2) + ' ' + chrome.i18n.getMessage("GB");
+				div.appendChild(sub);
+
+				sub = document.createElement('div');
+				sub.className = 'stat-sum-space';
+				sub.innerHTML = '&nbsp;';
+				div.appendChild(sub);
+
+				add.appendChild(div);
+
+				// Table header
+				divUp2 = document.createElement('div');
+				divUp2.className = 'stat-sites';
+
+				div = document.createElement('div');
+				div.className = 'stat-sites-head';
+
+				sub = document.createElement('div');
+				sub.className = 'stat-unit-number';
+				sub.innerHTML = '№';
+				div.appendChild(sub);
+
+				sub = document.createElement('div');
+				sub.className = 'stat-unit-domain';
+				sub.innerHTML = header;
+				div.appendChild(sub);
+
+				sub = document.createElement('div');
+				sub.className = 'stat-unit-traffic';
+				sub.innerHTML = chrome.i18n.getMessage("traffic") + ', ' + chrome.i18n.getMessage("GB") + '<div class="sort-down"></div>';
+				div.appendChild(sub);
+
+				sub = document.createElement('div');
+				sub.className = 'stat-unit-conn';
+				sub.innerHTML = chrome.i18n.getMessage("conn") + '<div class="sort-down"></div>';
+				div.appendChild(sub);
+
+				divUp2.appendChild(div);
+			}
+			// For sort
+			else {
+				flag = true;
+				divUp2 = add.getElementsByClassName('stat-sites')[0];
+			}
+
+			// Table body
+			divUp1 = document.createElement('div');
+			divUp1.className = 'stat-sites-list';
+			var links = this.list;
 
 			for (var i in links) {
 				if (links[i].traffic != 0) {
-					html = html + '	<div class="stat-unit">' +
-						'		<div class="stat-unit-number">' + (Number(i) + Number(1)) + '</div>' +
-						'		<div class="stat-unit-domain">' + links[i].site + '</div>' +
-						'		<div class="stat-unit-traffic">' + links[i].traffic + ' GB</div>' +
-						'	</div>';
+					// Table row					
+					div = document.createElement('div');
+					div.className = 'stat-unit';
+
+					sub = document.createElement('div');
+					sub.className = 'stat-unit-number';
+					sub.innerHTML = (Number(i) + Number(1));
+					div.appendChild(sub);
+
+					sub = document.createElement('div');
+					sub.className = 'stat-unit-domain';
+					sub.innerHTML = links[i].site;
+					div.appendChild(sub);
+
+					sub = document.createElement('div');
+					sub.className = 'stat-unit-traffic';
+					sub.innerHTML = links[i].traffic;
+					div.appendChild(sub);
+
+					sub = document.createElement('div');
+					sub.className = 'stat-unit-conn';
+					sub.innerHTML = links[i].conn.toLocaleString();
+					div.appendChild(sub);
+
+					divUp1.appendChild(div);
 				}
 			}
+			
+			if (flag) {
+				div = divUp2.getElementsByClassName('stat-sites-list')[0];
+				divUp2.removeChild(div);
+			}
 
-			add.innerHTML = html + '</div></div></div>';
-			this.elem.appendChild(add);
+			divUp2.appendChild(divUp1);
+
+			if (!flag) {
+				add.appendChild(divUp2);
+				this.elem.appendChild(add);
+			}
 		}
+	}
+
+	/**
+	 * Add sort actions to table header	 
+	 * @param {Object} obj LSConvert object
+	 */
+	static addSortActions(obj) {
+		var elem = document.getElementById('stat-' + obj.mode + 'dl');
+
+		// Traffic sort
+		elem.getElementsByClassName('stat-unit-traffic')[0]
+		.addEventListener('click', function() {
+			var sort = this.getElementsByTagName('div')[0];
+			if (sort.className == 'sort-down') {
+				sort.className = 'sort-up';
+				obj.sortList('traffic', 'up');
+				obj.renderList();
+			}
+			else if (sort.className == 'sort-up'){
+				sort.className = 'sort-down';
+				obj.sortList('traffic', 'down');
+				obj.renderList();
+			}
+		});
+
+		// Connection sort
+		elem.getElementsByClassName('stat-unit-conn')[0]
+		.addEventListener('click', function() {
+			var sort = this.getElementsByTagName('div')[0];
+			if (sort.className == 'sort-down') {
+				sort.className = 'sort-up';
+				obj.sortList('conn', 'up');
+				obj.renderList();
+			}
+			else if (sort.className == 'sort-up'){
+				sort.className = 'sort-down';
+				obj.sortList('conn', 'down');
+				obj.renderList();
+			}
+		});
 	}
 }
 
@@ -195,17 +361,20 @@ chrome.storage.sync.get('enable', function(item) {
 			span = document.createElement('span');
 			span.className  += 'stat-sld';
 			span.innerHTML   = chrome.i18n.getMessage('sld');
-			span.addEventListener('click', function(){
+			span.addEventListener('click', function() {
 				var d2 = document.getElementById('stat-2dl'),
 					d3 = document.getElementById('stat-3dl');
 					
 				convert.elem.getElementsByTagName('table')[0].className = 'elem-hide';
+				convert.setMode(2);
+				convert.buildList();
 
 				if (d2 !== null) 
 					d2.className = 'stat';
 				else {
-					convert.setMode(2);
-					convert.renderStats();
+					convert.sortList('traffic', 'down');
+					convert.renderList();
+					LSConvert.addSortActions(convert);
 				}
 
 				if (d3 !== null)
@@ -217,11 +386,13 @@ chrome.storage.sync.get('enable', function(item) {
 			span = document.createElement('span');
 			span.className  += 'stat-tld';
 			span.innerHTML   = chrome.i18n.getMessage('tld');
-			span.addEventListener('click', function(){
+			span.addEventListener('click', function() {
 				var d2 = document.getElementById('stat-2dl'),
 					d3 = document.getElementById('stat-3dl');
 
 				convert.elem.getElementsByTagName('table')[0].className = 'elem-hide';
+				convert.setMode(3);
+				convert.buildList();
 
 				if (d2 !== null) 
 					d2.className = 'elem-hide';
@@ -229,8 +400,9 @@ chrome.storage.sync.get('enable', function(item) {
 				if (d3 !== null)
 					d3.className = 'stat';				
 				else {
-					convert.setMode(3);
-					convert.renderStats();
+					convert.sortList('traffic', 'down');
+					convert.renderList();
+					LSConvert.addSortActions(convert);
 				}
 			});
 			links.appendChild(span);
@@ -239,7 +411,7 @@ chrome.storage.sync.get('enable', function(item) {
 			span = document.createElement('span');
 			span.className  += 'stat-begin';
 			span.innerHTML   = chrome.i18n.getMessage('begin');
-			span.addEventListener('click', function(){
+			span.addEventListener('click', function() {
 				var d2 = document.getElementById('stat-2dl'),
 					d3 = document.getElementById('stat-3dl');
 					

@@ -9,6 +9,11 @@
 		"description": "Extension description"
 	},
 
+	"extshort": {
+		"message": "LightSquid div",
+		"description": "Short extension name"
+	},
+
 	"sld": {
 		"message": "2-level domain",
 		"description": "Second-level domains table"
@@ -42,5 +47,15 @@
 	"traffic": {
 		"message": "Traffic",
 		"description": "Traffic for site"
+	},
+
+	"conn": {
+		"message": "Connections",
+		"description": "Number of connectioins to site"
+	},
+
+	"GB": {
+		"message": "GB",
+		"description": "Traffic measurement unit"
 	}
 }
