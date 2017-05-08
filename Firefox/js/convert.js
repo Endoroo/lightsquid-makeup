@@ -194,17 +194,16 @@ class LSConvert {
 
 				sub = document.createElement('div');
 				sub.className = 'stat-sum-text';
-				sub.innerHTML = browser.i18n.getMessage("all");
+				sub.textContent = browser.i18n.getMessage("all");
 				div.appendChild(sub);
 				
 				sub = document.createElement('div');
 				sub.className = 'stat-sum-number';
-				sub.innerHTML = sum.toFixed(2) + ' ' + browser.i18n.getMessage("GB");
+				sub.textContent = sum.toFixed(2) + ' ' + browser.i18n.getMessage("GB");
 				div.appendChild(sub);
 
 				sub = document.createElement('div');
 				sub.className = 'stat-sum-space';
-				sub.innerHTML = '&nbsp;';
 				div.appendChild(sub);
 
 				add.appendChild(div);
@@ -218,12 +217,12 @@ class LSConvert {
 
 				sub = document.createElement('div');
 				sub.className = 'stat-unit-number';
-				sub.innerHTML = '№';
+				sub.textContent = '№';
 				div.appendChild(sub);
 
 				sub = document.createElement('div');
 				sub.className = 'stat-unit-domain';
-				sub.innerHTML = header;
+				sub.textContent = header;
 				div.appendChild(sub);
 
 				sub = document.createElement('div');
@@ -257,22 +256,22 @@ class LSConvert {
 
 					sub = document.createElement('div');
 					sub.className = 'stat-unit-number';
-					sub.innerHTML = (Number(i) + Number(1));
+					sub.textContent = (Number(i) + Number(1));
 					div.appendChild(sub);
 
 					sub = document.createElement('div');
 					sub.className = 'stat-unit-domain';
-					sub.innerHTML = links[i].site;
+					sub.textContent = links[i].site;
 					div.appendChild(sub);
 
 					sub = document.createElement('div');
 					sub.className = 'stat-unit-traffic';
-					sub.innerHTML = links[i].traffic;
+					sub.textContent = links[i].traffic;
 					div.appendChild(sub);
 
 					sub = document.createElement('div');
 					sub.className = 'stat-unit-conn';
-					sub.innerHTML = links[i].conn.toLocaleString();
+					sub.textContent = links[i].conn.toLocaleString();
 					div.appendChild(sub);
 
 					divUp1.appendChild(div);
@@ -360,7 +359,7 @@ browser.storage.sync.get('enable', function(item) {
 			// add first el
 			span = document.createElement('span');
 			span.className  += 'stat-sld';
-			span.innerHTML   = browser.i18n.getMessage('sld');
+			span.textContent = browser.i18n.getMessage('sld');
 			span.addEventListener('click', function() {
 				var d2 = document.getElementById('stat-2dl'),
 					d3 = document.getElementById('stat-3dl');
@@ -385,7 +384,7 @@ browser.storage.sync.get('enable', function(item) {
 			// add second el
 			span = document.createElement('span');
 			span.className  += 'stat-tld';
-			span.innerHTML   = browser.i18n.getMessage('tld');
+			span.textContent = browser.i18n.getMessage('tld');
 			span.addEventListener('click', function() {
 				var d2 = document.getElementById('stat-2dl'),
 					d3 = document.getElementById('stat-3dl');
@@ -410,7 +409,7 @@ browser.storage.sync.get('enable', function(item) {
 			// add third el
 			span = document.createElement('span');
 			span.className  += 'stat-begin';
-			span.innerHTML   = browser.i18n.getMessage('begin');
+			span.textContent = browser.i18n.getMessage('begin');
 			span.addEventListener('click', function() {
 				var d2 = document.getElementById('stat-2dl'),
 					d3 = document.getElementById('stat-3dl');
