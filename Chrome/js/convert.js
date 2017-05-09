@@ -58,7 +58,7 @@ class LSConvert {
 		if (this.page == 'u') { td1 = 1; td2 = 2; td3 = 3; }
 		if (this.page == 't') { td1 = 2; td2 = 3; td3 = 4; }
 		
-		ar links = [], trs = document.getElementsByTagName('tr'),
+		var links = [], trs = document.getElementsByTagName('tr'),
 			tds, site, ip, conn, count, temp, i;
 
 		// get all sites from tr
