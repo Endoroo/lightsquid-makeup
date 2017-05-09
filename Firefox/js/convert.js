@@ -8,11 +8,11 @@ class LSConvert {
 	 * Constructor
 	 */
 	constructor() {
-		this.elem = {};
-		this.mode = 0;
-		this.page = '';
-		this.list = {};
-		this.sum  = 0;
+		this.elem = {}; // DOM element for conversion
+		this.mode = 0;  // Domain view mode
+		this.page = ''; // Page for conversion
+		this.list = {}; // List of domains
+		this.sum  = 0;  // General sum of traffic
 
 		var url = window.location.href;
 		if (url.match(/.+user_detail\.cgi.+/g) != null) {
@@ -58,7 +58,7 @@ class LSConvert {
 		if (this.page == 'u') { td1 = 1; td2 = 2; td3 = 3; }
 		if (this.page == 't') { td1 = 2; td2 = 3; td3 = 4; }
 		
-		var links = [], trs   = document.getElementsByTagName('tr'),
+		var links = [], trs = document.getElementsByTagName('tr'),
 			tds, site, ip, conn, count, temp, i;
 
 		// get all sites from tr
@@ -93,7 +93,7 @@ class LSConvert {
 				site = [tds[td1].getElementsByTagName('font')[0].innerHTML]; // array for next checking
 
 			if (site != null) {
-				if (ip != null)	site = ip[0]
+				if (ip != null)	site = ip[0];
 				else site = site[0];
 
 				site = site.replace(/:443/g,'');
@@ -114,7 +114,7 @@ class LSConvert {
 
 				// save traffic & connections
 				if (!links[site]) {
-					links[site] = {traffic: 0, conn: 0};
+					links[site] = { traffic: 0, conn: 0 };
 				}
 				links[site].traffic = Number(links[site].traffic) + Number(count);
 				links[site].conn    = Number(links[site].conn) + Number(conn);
@@ -127,7 +127,7 @@ class LSConvert {
 		for (site in links) {
 			if (links[site].traffic > 0) {
 				count = (links[site].traffic / 1024 / 1024 / 1024).toFixed(2);
-				stat.push({site: site, traffic: count, conn: links[site].conn});
+				stat.push({ site: site, traffic: count, conn: links[site].conn });
 				sum = Number(sum) + Number(count);
 			}
 		}
@@ -169,7 +169,7 @@ class LSConvert {
 	 * Generate new stats makeup	 
 	 * @param {Number} sum General traffic
 	 */
-	renderList(){
+	renderList() {
 		if (this.checkArgs()) {
 			var id = 'stat-' + this.mode + 'dl',
 				add = document.getElementById(id),
@@ -193,12 +193,12 @@ class LSConvert {
 				div.className  = 'stat-sum';
 
 				sub = document.createElement('div');
-				sub.className = 'stat-sum-text';
+				sub.className   = 'stat-sum-text';
 				sub.textContent = browser.i18n.getMessage("all");
 				div.appendChild(sub);
 				
 				sub = document.createElement('div');
-				sub.className = 'stat-sum-number';
+				sub.className   = 'stat-sum-number';
 				sub.textContent = sum.toFixed(2) + ' ' + browser.i18n.getMessage("GB");
 				div.appendChild(sub);
 
@@ -216,12 +216,12 @@ class LSConvert {
 				div.className = 'stat-sites-head';
 
 				sub = document.createElement('div');
-				sub.className = 'stat-unit-number';
+				sub.className   = 'stat-unit-number';
 				sub.textContent = '№';
 				div.appendChild(sub);
 
 				sub = document.createElement('div');
-				sub.className = 'stat-unit-domain';
+				sub.className   = 'stat-unit-domain';
 				sub.textContent = header;
 				div.appendChild(sub);
 
@@ -255,22 +255,22 @@ class LSConvert {
 					div.className = 'stat-unit';
 
 					sub = document.createElement('div');
-					sub.className = 'stat-unit-number';
+					sub.className   = 'stat-unit-number';
 					sub.textContent = (Number(i) + Number(1));
 					div.appendChild(sub);
 
 					sub = document.createElement('div');
-					sub.className = 'stat-unit-domain';
+					sub.className   = 'stat-unit-domain';
 					sub.textContent = links[i].site;
 					div.appendChild(sub);
 
 					sub = document.createElement('div');
-					sub.className = 'stat-unit-traffic';
+					sub.className   = 'stat-unit-traffic';
 					sub.textContent = links[i].traffic;
 					div.appendChild(sub);
 
 					sub = document.createElement('div');
-					sub.className = 'stat-unit-conn';
+					sub.className   = 'stat-unit-conn';
 					sub.textContent = links[i].conn.toLocaleString();
 					div.appendChild(sub);
 
