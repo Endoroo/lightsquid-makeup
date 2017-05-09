@@ -1,10 +1,10 @@
 // Check "on" setting on start
 chrome.windows.onCreated.addListener(function() {
  	chrome.storage.sync.get('enable', function(item) {
- 		var flag;
+ 		let flag;
 
  		// check previous state
- 		if (typeof item.enable == 'undefined') 
+ 		if (typeof item.enable === 'undefined')
  			flag = true;
  		else
  			flag = item.enable;
@@ -15,4 +15,4 @@ chrome.windows.onCreated.addListener(function() {
 		else		
 			chrome.browserAction.setIcon({path: "icons/icon16.png"});
  	});
-})
+});

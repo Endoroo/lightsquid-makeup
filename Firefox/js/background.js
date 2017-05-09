@@ -10,10 +10,10 @@ browser.browserAction.onClicked.addListener(function() {
 		if (browser.runtime.lastError) {
 			console.error(browser.runtime.lastError);
 		} else {
-			var flag;
+			let flag;
 
 			// get actual state
-			if (typeof item.enable == 'undefined') 
+			if (typeof item.enable === 'undefined')
 				flag = true;
 			else
 				flag = item.enable;

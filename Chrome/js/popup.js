@@ -17,10 +17,10 @@ function change() {
  */
  function _init() {
  	chrome.storage.sync.get('enable', function(item) {
- 		var flag;
+ 		let flag;
 
  		// check previous state
- 		if (typeof item.enable == 'undefined') 
+ 		if (typeof item.enable === 'undefined')
  			flag = true;
  		else
  			flag = item.enable;
